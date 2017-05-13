@@ -11,12 +11,22 @@ public class Ball extends Entity {
 	private Vector2f velocity;
 	private int radius;
 	
+	private Brick lastHit;
+	
 	public static final int SPEED = 8;
 	
 	public Ball(int x, int y, int radius) {
 		super(x, y);
 		velocity = new Vector2f(0f, 0f);
 		this.radius = radius;
+	}
+	
+	public void setLastHit(Brick brick) {
+		lastHit = brick;
+	}
+	
+	public Brick getLastHit() {
+		return lastHit;
 	}
 	
 	public Ball() {
@@ -36,10 +46,12 @@ public class Ball extends Entity {
 		
 		if(this.x < 0 || this.x + this.radius > Game.WIDTH) {
 			this.velocity = new Vector2f(-this.velocity.getX(), this.velocity.getY());
+			lastHit = null;
 		}
 		
 		if(this.y < 0) {
 			this.velocity = new Vector2f(this.velocity.getX(), -this.velocity.getY());
+			lastHit = null;
 		}
 	}
 	

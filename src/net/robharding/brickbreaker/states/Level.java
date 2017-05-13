@@ -11,8 +11,6 @@ import net.robharding.brickbreaker.entities.Drop;
 import net.robharding.brickbreaker.entities.Gun;
 import net.robharding.brickbreaker.entities.Paddle;
 import net.robharding.brickbreaker.math.Vector2f;
-import net.robharding.brickbreaker.states.GameState;
-import net.robharding.brickbreaker.states.GameStateManager;
 
 public class Level extends GameState {
 	
@@ -112,19 +110,20 @@ public class Level extends GameState {
 				if(AABBIntersect(ball.getX(), ball.getY(), ball.getDiameter(),
 						ball.getDiameter(), brick.getX(), brick.getY(), 
 						Brick.BRICK_WIDTH, Brick.BRICK_HEIGHT)) {
-					brick.takeDamage();
 					
-					if((ball.getX() + ball.getDiameter() > brick.getX() + Brick.BRICK_WIDTH &&
-							ball.getX() < brick.getX() + Brick.BRICK_WIDTH) ||
-						(ball.getX() < brick.getX() && ball.getX() + ball.getDiameter() > brick.getX())) {
-						ball.setVelocity(new Vector2f(-ball.getVelocity().getX(), ball.getVelocity().getY()));
+					if(brick == ball.getLastHit()) {
+						continue;
+					}else {
+						brick.takeDamage();
 					}
 					
-					if((ball.getY() + ball.getDiameter() > brick.getY() + Brick.BRICK_HEIGHT &&
-							ball.getY() < brick.getY() + Brick.BRICK_HEIGHT) ||
-						(ball.getY() < brick.getY() && ball.getY() + ball.getDiameter() > brick.getY())) {
+					if((ball.getX() < brick.getX() && ball.getX() + ball.getDiameter() > brick.getX()) && ball.getY() + (ball.getDiameter() / 2) > brick.getY() || (ball.getX() + ball.getDiameter() > brick.getX() + Brick.BRICK_WIDTH && ball.getX() < brick.getX() + Brick.BRICK_WIDTH) && ball.getY() + (ball.getDiameter() / 2) < brick.getY() + Brick.BRICK_HEIGHT && ball.getY() + (ball.getDiameter() / 2) > brick.getY()) {
+						ball.setVelocity(new Vector2f(-ball.getVelocity().getX(), ball.getVelocity().getY()));
+					} else {
 						ball.setVelocity(new Vector2f(ball.getVelocity().getX(), -ball.getVelocity().getY()));
 					}
+					
+					ball.setLastHit(brick);
 					
 				}
 			}
@@ -144,6 +143,7 @@ public class Level extends GameState {
 			if(AABBIntersect(ball.getX(), ball.getY(), ball.getDiameter(),
 					ball.getDiameter(), paddle.getX(), paddle.getY(),
 					paddle.getWidth(), paddle.getHeight())) {
+				ball.setLastHit(null);
 				
 				ball.setY(paddle.getY() - ball.getDiameter());
 				
@@ -186,14 +186,6 @@ public class Level extends GameState {
 
 	@Override
 	public void cleanUp() {
-		screen.removeEntity(ball);
-		screen.removeEntity(paddle);
-		screen.removeEntity(gun);
-		for(Brick b: bricks) {
-			screen.removeEntity(b);
-		}
-		for(Drop d: drops) {
-			screen.removeEntity(d);
-		}
+		screen.cleanUp();
 	}
 }

@@ -9,13 +9,14 @@ public class Mouse implements MouseListener {
 	
 	public boolean[] buttons = new boolean[3];
 	public boolean rightPressed;
+	public boolean rightReleased;
 	
 	public void update() {
 		x = (int)Game.getMousePos().getX();
 		y = (int)Game.getMousePos().getY();
 		
 		rightPressed = buttons[MouseEvent.BUTTON1];
-		
+		rightReleased = false;
 	}
 
 	@Override
@@ -31,6 +32,9 @@ public class Mouse implements MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		buttons[e.getButton()] = false;
+		if(e.getButton() == MouseEvent.BUTTON1) {
+			rightReleased = true;
+		}
 	}
 
 	@Override

@@ -35,6 +35,10 @@ public class Screen extends Canvas {
 		entities.remove(e);
 	}
 	
+	public void cleanUp() {
+		entities = new ArrayList<Entity>();
+	}
+	
 	public void render() {
 		BufferStrategy bs = getBufferStrategy();
 		if(bs == null) {

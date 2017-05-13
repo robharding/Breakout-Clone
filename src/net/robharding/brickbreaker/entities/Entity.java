@@ -31,10 +31,6 @@ public abstract class Entity {
 		this.y = y;
 	}
 	
-	//TODO: Handle entity clicks
-	
-	
-	
 	public abstract void update();
 	public abstract void draw(Graphics2D g);
 

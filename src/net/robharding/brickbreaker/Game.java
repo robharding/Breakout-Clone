@@ -24,7 +24,7 @@ public class Game extends JFrame implements Runnable {
 	
 	public static Screen screen;
 	
-	private static Game game;
+	public static Game game;
 	
 	private static int mousex = 0, mousey = 0;
 	
@@ -65,7 +65,6 @@ public class Game extends JFrame implements Runnable {
 	
 	public synchronized void stop() {
 		isRunning = false;
-		
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
