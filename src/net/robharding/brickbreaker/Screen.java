@@ -52,7 +52,7 @@ public class Screen extends Canvas {
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		g2d.setColor(new Color(236, 240, 241));
-		g.fillRect(0, 0, width, height);
+		g.fillRect(0, 0, width+20, height+20);
 		
 		for(Entity e: entities) {
 			e.draw(g2d);
