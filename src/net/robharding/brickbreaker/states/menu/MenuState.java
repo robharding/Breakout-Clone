@@ -25,7 +25,6 @@ public class MenuState extends GameState {
 	
 	@Override
 	public void init() {
-		
 		entities.add(new ImageEntity(28, 120, titleImage));
 		screen.addEntity(entities.get(0));
 		

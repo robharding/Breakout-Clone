@@ -16,7 +16,7 @@ public class PauseState extends GameState {
 	
 	public PauseState(GameStateManager gsm) {
 		super(gsm);
-		titleImage = FileUtils.loadImage("res/");
+		//titleImage = FileUtils.loadImage("res/");
 		
 	}
 
