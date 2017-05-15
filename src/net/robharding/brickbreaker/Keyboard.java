@@ -7,11 +7,12 @@ public class Keyboard implements KeyListener {
 	
 	private boolean[] keys = new boolean[120];
 	
-	public boolean left, right;
+	public boolean left, right, esc;
 	
 	public void update() {
 		left = keys[KeyEvent.VK_LEFT] || keys[KeyEvent.VK_A];
 		right = keys[KeyEvent.VK_RIGHT] || keys[KeyEvent.VK_D];
+		esc = keys[KeyEvent.VK_ESCAPE];
 	}
 	
 	public void keyPressed(KeyEvent e) {

@@ -40,6 +40,17 @@ public class GameStateManager {
 		init();
 	}
 	
+	public void pause() {
+		currentState = PAUSESTATE;
+		init();
+	}
+	
+	public void unpause() {
+		cleanUp();
+		currentState = PLAYSTATE;
+		gameStates.get(currentState).reInit();
+	}
+	
 	public void init() {
 		gameStates.get(currentState).init();
 	}

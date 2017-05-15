@@ -14,7 +14,7 @@ public class Game extends JFrame implements Runnable {
 	public static final int HEIGHT = 700;
 	public static final String TITLE = "Brick Breaker";
 	
-	public static Keyboard keyBoard;
+	public static Keyboard keyboard;
 	public static Mouse mouse;
 	
 	private GameStateManager gsm;
@@ -45,9 +45,9 @@ public class Game extends JFrame implements Runnable {
 	public synchronized void start() {
 		screen = new Screen(WIDTH, HEIGHT);
 		
-		keyBoard = new Keyboard();
-		addKeyListener(keyBoard);
-		screen.addKeyListener(keyBoard);
+		keyboard = new Keyboard();
+		addKeyListener(keyboard);
+		screen.addKeyListener(keyboard);
 		
 		mouse = new Mouse();
 		addMouseListener(mouse);
@@ -97,7 +97,7 @@ public class Game extends JFrame implements Runnable {
 	
 	private void update() {
 		gsm.update();
-		keyBoard.update();
+		keyboard.update();
 		mouse.update();
 	}
 	

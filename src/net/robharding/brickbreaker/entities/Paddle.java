@@ -23,11 +23,11 @@ public class Paddle extends Entity {
 	
 	@Override
 	public void update() {
-		if(Game.keyBoard.left) {
+		if(Game.keyboard.left) {
 			x-=10;
 		}
 		
-		if(Game.keyBoard.right) {
+		if(Game.keyboard.right) {
 			x+=10;
 		}
 		

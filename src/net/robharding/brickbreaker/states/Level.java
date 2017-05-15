@@ -44,7 +44,7 @@ public class Level extends GameState {
 		gun = new Gun(ball);
 	}
 	
-	private void loadEntitiesToScreen() {
+	public void loadEntitiesToScreen() {
 		for(Brick brick: bricks) {
 			screen.addEntity(brick);
 		}
@@ -92,6 +92,11 @@ public class Level extends GameState {
 	
 	@Override
 	public void update() {
+		
+		if(keyboard.esc) {
+			gsm.pause();
+		}
+		
 		if(currentStage == Stage.PLAY) {
 			paddle.update();
 			ball.update();
@@ -182,6 +187,11 @@ public class Level extends GameState {
 		loadLevel(levelSource);
 		loadEntitiesToScreen();
 		currentStage = Stage.SHOOT;
+	}
+	
+	@Override
+	public void reInit() {
+		loadEntitiesToScreen();
 	}
 
 	@Override
