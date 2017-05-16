@@ -28,8 +28,6 @@ public class Game extends JFrame implements Runnable {
 	
 	private static int mousex = 0, mousey = 0;
 	
-	public static int playerScore = 0;
-	
 	public Game() {
 		super(TITLE);
 		start();
