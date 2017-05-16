@@ -44,8 +44,15 @@ public class Ball extends Entity {
 		this.x += velocity.getX();
 		this.y += velocity.getY();
 		
-		if(this.x < 0 || this.x + this.radius > Game.WIDTH) {
+		if(this.x < 0) {
+			this.x = 1;
 			this.velocity = new Vector2f(-this.velocity.getX(), this.velocity.getY());
+			lastHit = null;
+		}
+		
+		if(this.x + this.radius > Game.WIDTH) {
+			this.velocity = new Vector2f(-this.velocity.getX(), this.velocity.getY());
+			this.x = Game.WIDTH - radius;
 			lastHit = null;
 		}
 		
