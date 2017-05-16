@@ -85,7 +85,7 @@ public class Level extends GameState {
 	
 	private boolean testForDrop() {
 		Random rand = new Random();
-		if(rand.nextFloat() <= 0.5f)
+		if(rand.nextFloat() <= 0.3f)
 			return true;
 		return false;
 	}
@@ -129,6 +129,7 @@ public class Level extends GameState {
 					}
 					
 					ball.setLastHit(brick);
+					break;
 					
 				}
 			}

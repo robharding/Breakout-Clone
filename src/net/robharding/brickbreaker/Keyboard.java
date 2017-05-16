@@ -12,7 +12,7 @@ public class Keyboard implements KeyListener {
 	public void update() {
 		left = keys[KeyEvent.VK_LEFT] || keys[KeyEvent.VK_A];
 		right = keys[KeyEvent.VK_RIGHT] || keys[KeyEvent.VK_D];
-		esc = keys[KeyEvent.VK_ESCAPE];
+		esc = false;
 	}
 	
 	public void keyPressed(KeyEvent e) {
@@ -21,6 +21,10 @@ public class Keyboard implements KeyListener {
 	
 	public void keyReleased(KeyEvent e) {
 		keys[e.getKeyCode()] = false;
+		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			esc = true;
+		}
+
 	}
 	
 	public void keyTyped(KeyEvent e) {

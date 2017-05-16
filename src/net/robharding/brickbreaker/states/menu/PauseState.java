@@ -51,6 +51,10 @@ public class PauseState extends GameState {
 		} else if(entities.get(3).clicked) {
 			System.exit(0);
 		}
+		
+		if(keyboard.esc) {
+			gsm.unpause();
+		}
 	}
 
 	@Override
