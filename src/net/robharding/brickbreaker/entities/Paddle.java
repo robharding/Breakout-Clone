@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import net.robharding.brickbreaker.Game;
-
 public class Paddle extends Entity {
 	
 	private int width, height;
@@ -24,19 +23,19 @@ public class Paddle extends Entity {
 	@Override
 	public void update() {
 		if(Game.keyboard.left) {
-			x-=10;
+			x-=8;
 		}
 		
 		if(Game.keyboard.right) {
-			x+=10;
+			x+=8;
 		}
 		
-		if(x < 0) {
-			x = 2;
+		if(x < 5) {
+			x += 8;
 		}
 		
-		if(x + width > Game.WIDTH) {
-			x = Game.WIDTH - width - 2;
+		if(x + width > Game.WIDTH - 5) {
+			x -= 8;
 		}
 	}
 	
