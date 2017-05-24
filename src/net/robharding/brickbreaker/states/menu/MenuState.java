@@ -1,10 +1,7 @@
 package net.robharding.brickbreaker.states.menu;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
-import net.robharding.brickbreaker.entities.Entity;
 import net.robharding.brickbreaker.entities.ImageEntity;
 import net.robharding.brickbreaker.states.GameState;
 import net.robharding.brickbreaker.states.GameStateManager;
@@ -94,7 +91,7 @@ public class MenuState extends GameState {
 				gsm.setCurrentState(GameStateManager.PLAYSTATE);
 				break;
 			case 2:
-				//TODO: goto highscores screen
+				//TODO: goto high scores screen
 				break;
 			case 3:
 				System.exit(0);
