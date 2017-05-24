@@ -5,6 +5,7 @@ import static net.robharding.brickbreaker.math.Intersections.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import net.robharding.brickbreaker.Game;
 import net.robharding.brickbreaker.entities.Ball;
 import net.robharding.brickbreaker.entities.Brick;
 import net.robharding.brickbreaker.entities.Drop;
@@ -92,6 +93,10 @@ public class Level extends GameState {
 	
 	@Override
 	public void update() {
+		
+		if(ball.getY() > Game.HEIGHT) {
+			gsm.setCurrentState(GameStateManager.GAMEOVERSTATE);
+		}
 		
 		if(keyboard.esc) {
 			gsm.pause();

@@ -2,6 +2,7 @@ package net.robharding.brickbreaker.states;
 
 import java.util.ArrayList;
 
+import net.robharding.brickbreaker.states.menu.GameOverState;
 import net.robharding.brickbreaker.states.menu.MenuState;
 import net.robharding.brickbreaker.states.menu.PauseState;
 import net.robharding.brickbreaker.util.FileUtils;
@@ -13,7 +14,8 @@ public class GameStateManager {
 	
 	public static final int MENUSTATE = 0;
 	public static final int PAUSESTATE = 1;
-	public static final int PLAYSTATE = 2;
+	public static final int GAMEOVERSTATE = 2;
+	public static final int PLAYSTATE = 3;
 	
 	public static int currentLevel = 1;
 	
@@ -21,13 +23,14 @@ public class GameStateManager {
 		gameStates = new ArrayList<GameState>();
 		gameStates.add(new MenuState(this));
 		gameStates.add(new PauseState(this));
+		gameStates.add(new GameOverState(this));
 		gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl")));
 		init();
 	}
 	
 	public void levelUp() {
 			cleanUp();
-			gameStates.remove(2);
+			gameStates.remove(3);
 			currentLevel++;
 			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl")));
 			init();
