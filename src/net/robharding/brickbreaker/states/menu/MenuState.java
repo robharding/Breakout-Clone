@@ -12,8 +12,10 @@ import net.robharding.brickbreaker.util.FileUtils;
 
 public class MenuState extends GameState {
 
-	private BufferedImage titleImage, playImage, quitImage, highscoresImage;
-	private List<ImageEntity> entities = new ArrayList<ImageEntity>();
+	private BufferedImage titleImage, playImage, quitImage, highscoresImage, playImage2, quitImage2, highscoresImage2;
+	private ImageEntity titleEntity, playEntity, playEntity2, quitEntity, quitEntity2, highscoresEntity, highscoresEntity2;
+	
+	private int currentSelected = 1;
 	
 	public MenuState(GameStateManager gsm) {
 		super(gsm);
@@ -21,33 +23,83 @@ public class MenuState extends GameState {
 		playImage = FileUtils.loadImage("res/play.png");
 		quitImage = FileUtils.loadImage("res/quit.png");
 		highscoresImage = FileUtils.loadImage("res/highscores.png");
+		playImage2 = FileUtils.loadImage("res/play2.png");
+		quitImage2 = FileUtils.loadImage("res/quit2.png");
+		highscoresImage2 = FileUtils.loadImage("res/highscores2.png");
 	}
 	
 	@Override
 	public void init() {
-		entities.add(new ImageEntity(28, 120, titleImage));
-		screen.addEntity(entities.get(0));
+		titleEntity = new ImageEntity(28, 120, titleImage);
+		screen.addEntity(titleEntity);
 		
-		entities.add(new ImageEntity(205, 263, playImage));
-		screen.addEntity(entities.get(1));
+		playEntity = new ImageEntity(205, 263, playImage);
+		playEntity2 = new ImageEntity(205, 263, playImage2);
+		screen.addEntity(playEntity);
 		
-		entities.add(new ImageEntity(107, 350, highscoresImage));
-		screen.addEntity(entities.get(2)); 
+		highscoresEntity = new ImageEntity(107, 350, highscoresImage);
+		highscoresEntity2 = new ImageEntity(107, 350, highscoresImage2);
+		screen.addEntity(highscoresEntity2);
 		
-		entities.add(new ImageEntity(205, 417, quitImage));
-		screen.addEntity(entities.get(3));
+		quitEntity = new ImageEntity(205, 417, quitImage);
+		quitEntity2 = new ImageEntity(205, 417, quitImage2);
+		screen.addEntity(quitEntity2);
 	}
 
 	@Override
 	public void update() {
-		for(Entity e: entities) {
-			e.update();
+		
+		if(keyboard.down && currentSelected < 3) {
+			currentSelected ++;
+		} else if(keyboard.up && currentSelected > 1) {
+			currentSelected--;
 		}
 		
-		if(entities.get(1).clicked) {
-			gsm.setCurrentState(GameStateManager.PLAYSTATE);
-		} else if(entities.get(3).clicked) {
-			System.exit(0);
+		if(currentSelected == 1) {
+			if(!screen.containsEntity(playEntity)) {
+				screen.removeEntity(playEntity2);
+				screen.addEntity(playEntity);
+			}
+			if(!screen.containsEntity(highscoresEntity2)) {
+				screen.removeEntity(highscoresEntity);
+				screen.addEntity(highscoresEntity2);
+			}
+		} else if(currentSelected == 2) {
+			if(!screen.containsEntity(playEntity2)) {
+				screen.removeEntity(playEntity);
+				screen.addEntity(playEntity2);
+			}
+			if(!screen.containsEntity(highscoresEntity)) {
+				screen.removeEntity(highscoresEntity2);
+				screen.addEntity(highscoresEntity);
+			}
+			if(!screen.containsEntity(quitEntity2)) {
+				screen.removeEntity(quitEntity);
+				screen.addEntity(quitEntity2);
+			}
+		} else if(currentSelected == 3) {
+			if(!screen.containsEntity(highscoresEntity2)) {
+				screen.removeEntity(highscoresEntity);
+				screen.addEntity(highscoresEntity2);
+			}
+			if(!screen.containsEntity(quitEntity)) {
+				screen.removeEntity(quitEntity2);
+				screen.addEntity(quitEntity);
+			}
+		}
+		
+		if(keyboard.space) {
+			switch(currentSelected) {
+			case 1:
+				gsm.setCurrentState(GameStateManager.PLAYSTATE);
+				break;
+			case 2:
+				//TODO: goto highscores screen
+				break;
+			case 3:
+				System.exit(0);
+				break;
+			}
 		}
 	}
 

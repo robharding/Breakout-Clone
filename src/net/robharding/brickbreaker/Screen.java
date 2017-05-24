@@ -35,6 +35,10 @@ public class Screen extends Canvas {
 		entities.remove(e);
 	}
 	
+	public boolean containsEntity(Entity e) {
+		return entities.contains(e);
+	}
+	
 	public void cleanUp() {
 		entities = new ArrayList<Entity>();
 	}

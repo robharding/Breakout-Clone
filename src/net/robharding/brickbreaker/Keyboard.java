@@ -7,11 +7,13 @@ public class Keyboard implements KeyListener {
 	
 	private boolean[] keys = new boolean[120];
 	
-	public boolean left, right, esc, space;
+	public boolean up, down, left, right, esc, space;
 	
 	public void update() {
 		left = keys[KeyEvent.VK_LEFT] || keys[KeyEvent.VK_A];
 		right = keys[KeyEvent.VK_RIGHT] || keys[KeyEvent.VK_D];
+		up = false;
+		down = false;
 		esc = false;
 		space = false;
 	}
@@ -26,6 +28,10 @@ public class Keyboard implements KeyListener {
 			esc = true;
 		} else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
 			space = true;
+		} else if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
+			up = true;
+		} else if(e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
+			down = true;
 		}
 
 	}
