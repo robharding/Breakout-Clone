@@ -43,10 +43,10 @@ public class Ball extends Entity {
 		
 		this.x += velocity.getX();
 		this.y += velocity.getY();
-
+		
 		if(this.x < 0) {
-			this.velocity = new Vector2f(-this.velocity.getX(), this.velocity.getY());
 			this.x = 1;
+			this.velocity = new Vector2f(-this.velocity.getX(), this.velocity.getY());
 			lastHit = null;
 		}
 		

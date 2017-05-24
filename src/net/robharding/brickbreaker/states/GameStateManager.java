@@ -11,7 +11,7 @@ public class GameStateManager {
 	
 	private ArrayList<GameState> gameStates;
 	public int currentState = 0;
-
+	
 	public static final int MENUSTATE = 0;
 	public static final int PAUSESTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
@@ -30,7 +30,7 @@ public class GameStateManager {
 	
 	public void levelUp() {
 			cleanUp();
-			gameStates.remove(2);
+			gameStates.remove(3);
 			currentLevel++;
 			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl")));
 			init();

@@ -93,7 +93,11 @@ public class Level extends GameState {
 	
 	@Override
 	public void update() {
-
+		
+		if(ball.getY() > Game.HEIGHT) {
+			gsm.setCurrentState(GameStateManager.GAMEOVERSTATE);
+		}
+		
 		if(keyboard.esc) {
 			gsm.pause();
 		}
@@ -109,15 +113,6 @@ public class Level extends GameState {
 			if(bricks.size() == 0) {
 				gsm.levelUp();
 				return;
-			}
-			
-			if(ball.getY() > Game.HEIGHT) {
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				gsm.setCurrentState(GameStateManager.GAMEOVERSTATE);
 			}
 			
 			// brick collisions
