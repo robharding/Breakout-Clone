@@ -22,7 +22,6 @@ public class GameStateManager {
 		gameStates.add(new MenuState(this));
 		gameStates.add(new PauseState(this));
 		gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl")));
-
 		init();
 	}
 	
