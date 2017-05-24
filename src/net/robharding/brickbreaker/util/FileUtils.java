@@ -22,8 +22,8 @@ public class FileUtils {
 			}
 			reader.close();
  		} catch(IOException e) {
-			e.printStackTrace();
-		}
+ 			e.printStackTrace();
+ 		}
 		return result.toString();
 	}
 	

@@ -1,6 +1,8 @@
 package net.robharding.brickbreaker;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import net.robharding.brickbreaker.util.FileUtils;
@@ -16,13 +18,14 @@ public class ScoreManager {
 		highscores = new ArrayList<HighScore>();
 	}
 	
+	private void fillHighscores() {
+		for(int i = 0; i < 10; i++) {
+			highscores.add(new HighScore("", -1));
+		}
+	}
+	
 	public void loadHighscores() {
 		String scoreData = FileUtils.loadAsString("data/scores.txt");
-		if(scoreData == null) {
-			System.out.println("Creating scores file");
-			File f = new File("data/scores.txt");
-		}
-			
 	}
 	
 	public int getScore() {

@@ -24,6 +24,8 @@ public class Game extends JFrame implements Runnable {
 	
 	public static Screen screen;
 	
+	public static ScoreManager scoreManager;
+	
 	public static Game game;
 	
 	private static int mousex = 0, mousey = 0;
@@ -60,6 +62,9 @@ public class Game extends JFrame implements Runnable {
 		gsm = new GameStateManager();
 
 		isRunning = true;
+		
+		scoreManager = new ScoreManager();
+		scoreManager.loadHighscores();
 		
 		thread = new Thread(this, "Game");
 		thread.start();
