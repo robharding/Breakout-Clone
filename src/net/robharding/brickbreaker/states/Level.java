@@ -3,8 +3,8 @@ package net.robharding.brickbreaker.states;
 import static net.robharding.brickbreaker.math.Intersections.AABBIntersect;
 
 import java.awt.Color;
+import java.util.List;
 import java.util.ArrayList;
-import java.util.Random;
 
 import net.robharding.brickbreaker.Game;
 import net.robharding.brickbreaker.entities.Ball;
@@ -13,17 +13,16 @@ import net.robharding.brickbreaker.entities.Gun;
 import net.robharding.brickbreaker.entities.Paddle;
 import net.robharding.brickbreaker.entities.TextEntity;
 import net.robharding.brickbreaker.entities.drops.Drop;
-import net.robharding.brickbreaker.entities.drops.PaddleExtension;
 import net.robharding.brickbreaker.math.Vector2f;
 
 public class Level extends GameState {
 	
 	protected Paddle paddle;
-	protected Ball ball;
 	protected Gun gun;
 	protected TextEntity scoreLabel, score, levelLabel, level;
 	
 	private static ArrayList<Brick> bricks;
+	private static ArrayList<Ball> balls;
 	public ArrayList<Drop> drops;
 	
 	private int levelNum;
@@ -56,10 +55,11 @@ public class Level extends GameState {
 	
 	private void initEntities() {
 		paddle = new Paddle();
-		ball = new Ball();
 		bricks = new ArrayList<Brick>();
 		drops = new ArrayList<Drop>();
-		gun = new Gun(ball);
+		balls = new ArrayList<Ball>();
+		balls.add(new Ball());
+		gun = new Gun(balls.get(0));
 		scoreLabel = new TextEntity(10, 40, "Score:", 36f, Color.BLACK);
 		score = new TextEntity(130, 45, Integer.toString(scoreNum), 48f, Color.RED);
 		levelLabel = new TextEntity(Game.WIDTH - 150, 40,"Level", 36f, Color.BLACK);
@@ -70,7 +70,7 @@ public class Level extends GameState {
 		for(Brick brick: bricks) {
 			screen.addEntity(brick);
 		}
-		screen.addEntity(ball);
+		screen.addEntity(balls.get(0));
 		screen.addEntity(gun);
 		screen.addEntity(paddle);
 		screen.addEntity(scoreLabel);
@@ -112,7 +112,16 @@ public class Level extends GameState {
 	@Override
 	public void update() {
 		
-		if(ball.getY() > Game.HEIGHT) {
+		List<Ball> ballsToRemove = new ArrayList<Ball>();
+		
+		for(Ball ball: balls) {
+			if(ball.getY() > Game.HEIGHT + 30) {
+				ballsToRemove.add(ball);
+			}
+		}
+		
+		balls.removeAll(ballsToRemove);
+		if(balls.size() == 0) {
 			scoreNum = 0;
 			gsm.setCurrentState(GameStateManager.GAMEOVERSTATE);
 		}
@@ -123,40 +132,11 @@ public class Level extends GameState {
 		
 		if(currentStage == Stage.PLAY) {
 			paddle.update();
-			ball.update();
-			
-			for(Drop d: drops) {
-				d.update();
-			}
 			
 			if(bricks.size() == 0) {
 				scoreNum += 100;
 				gsm.levelUp(scoreNum);
 				return;
-			}
-			
-			// brick collisions
-			for(Brick brick: bricks) {
-				if(AABBIntersect(ball.getX(), ball.getY(), ball.getDiameter(),
-						ball.getDiameter(), brick.getX(), brick.getY(), 
-						Brick.BRICK_WIDTH, Brick.BRICK_HEIGHT)) {
-					
-					if(brick == ball.getLastHit()) {
-						continue;
-					}else {
-						brick.takeDamage();
-					}
-					
-					if((ball.getX() < brick.getX() && ball.getX() + ball.getDiameter() > brick.getX()) && ball.getY() + (ball.getDiameter() / 2) > brick.getY() || (ball.getX() + ball.getDiameter() > brick.getX() + Brick.BRICK_WIDTH && ball.getX() < brick.getX() + Brick.BRICK_WIDTH) && ball.getY() + (ball.getDiameter() / 2) < brick.getY() + Brick.BRICK_HEIGHT && ball.getY() + (ball.getDiameter() / 2) > brick.getY()) {
-						ball.setVelocity(new Vector2f(-ball.getVelocity().getX(), ball.getVelocity().getY()));
-					} else {
-						ball.setVelocity(new Vector2f(ball.getVelocity().getX(), -ball.getVelocity().getY()));
-					}
-					
-					ball.setLastHit(brick);
-					break;
-					
-				}
 			}
 			
 			// drop collisions
@@ -170,15 +150,66 @@ public class Level extends GameState {
 				}
 			}
 			
-			// paddle collisions
-			if(AABBIntersect(ball.getX(), ball.getY(), ball.getDiameter(),
-					ball.getDiameter(), paddle.getX(), paddle.getY(),
-					paddle.getWidth(), paddle.getHeight())) {
-				ball.setLastHit(null);
+			// remove bricks when their health <= 0
+			for(int i = 0; i < bricks.size(); i++) {
+				Brick b = bricks.get(i);
+							
+				if(b.getHealth() <= 0) {
+					scoreNum += 10;
+					score.setText(Integer.toString(scoreNum));
+					
+					// percentage chance to drop a buff
+					Drop d = Drop.chooseRandomDrop(b.getX() + (Brick.BRICK_HEIGHT / 2) - 35/2, b.getY(), this);
+					
+					if(d != null) {
+						drops.add(d);
+						screen.addEntity(d);
+					}
+					screen.removeEntity(b);
+					bricks.remove(i);
+				}
+			}
+			
+			for(Ball ball: balls) {
+				ball.update();
+			
+				// brick collisions
+				for(Brick brick: bricks) {
+					if(AABBIntersect(ball.getX(), ball.getY(), ball.getDiameter(),
+							ball.getDiameter(), brick.getX(), brick.getY(), 
+							Brick.BRICK_WIDTH, Brick.BRICK_HEIGHT)) {
+					
+						if(brick == ball.getLastHit()) {
+							continue;
+						}else {
+							brick.takeDamage();
+						}
+					
+						if((ball.getX() < brick.getX() && ball.getX() + ball.getDiameter() > brick.getX()) && ball.getY() + (ball.getDiameter() / 2) > brick.getY() || (ball.getX() + ball.getDiameter() > brick.getX() + Brick.BRICK_WIDTH && ball.getX() < brick.getX() + Brick.BRICK_WIDTH) && ball.getY() + (ball.getDiameter() / 2) < brick.getY() + Brick.BRICK_HEIGHT && ball.getY() + (ball.getDiameter() / 2) > brick.getY()) {
+							ball.setVelocity(new Vector2f(-ball.getVelocity().getX(), ball.getVelocity().getY()));
+						} else {
+							ball.setVelocity(new Vector2f(ball.getVelocity().getX(), -ball.getVelocity().getY()));
+						}
+					
+						ball.setLastHit(brick);
+						break;
+					
+					}
+				}
+			
+				// paddle collisions
+				if(AABBIntersect(ball.getX(), ball.getY(), ball.getDiameter(),
+						ball.getDiameter(), paddle.getX(), paddle.getY(),
+						paddle.getWidth(), paddle.getHeight())) {
+					ball.setLastHit(null);
 				
-				ball.setY(paddle.getY() - ball.getDiameter());
+					ball.setY(paddle.getY() - ball.getDiameter());
 				
-				ball.setVelocity(new Vector2f(ball.getVelocity().getX(), -ball.getVelocity().getY()));
+					ball.setVelocity(new Vector2f(ball.getVelocity().getX(), -ball.getVelocity().getY()));
+				}
+			}
+			for(Drop d: drops) {
+				d.update();
 			}
 		} if(currentStage == Stage.SHOOT) {
 			gun.update();
@@ -188,30 +219,24 @@ public class Level extends GameState {
 				gun.setVisible(false);
 			}
 		}
-		
-		// remove bricks when their health <= 0
-		for(int i = 0; i < bricks.size(); i++) {
-			Brick b = bricks.get(i);
-						
-			if(b.getHealth() <= 0) {
-				scoreNum += 10;
-				score.setText(Integer.toString(scoreNum));
-				
-				// percentage chance to drop a buff
-				Drop d = Drop.chooseRandomDrop(b.getX() + (Brick.BRICK_HEIGHT / 2) - 35/2, b.getY(), this);
-				
-				if(d != null) {
-					drops.add(d);
-					screen.addEntity(d);
-				}
-				screen.removeEntity(b);
-				bricks.remove(i);
-			}
-		}
 	}
 	
 	public void extendPaddle() {
 		paddle.extend();
+	}
+	
+	public void collectStar() {
+		scoreNum += 20;
+		score.setText(Integer.toString(scoreNum));
+	}
+	
+	public void shootExtraBall() {
+		Ball b = new Ball(paddle.getX() + (paddle.getWidth() / 2) - 8, paddle.getY(), 16);
+		gun = new Gun(paddle.getX() + (paddle.getWidth() / 2), paddle.getY(), b);
+		screen.addEntity(gun);
+		balls.add(b);
+		screen.addEntity(b);
+		currentStage = Stage.SHOOT;
 	}
 
 	@Override

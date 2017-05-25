@@ -31,6 +31,7 @@ public class Ball extends Entity {
 	
 	public Ball() {
 		super((Game.WIDTH - 8)/2, Game.HEIGHT - 50-16);
+		velocity = new Vector2f(0f, 0f);
 		this.radius = 16;
 	}
 	

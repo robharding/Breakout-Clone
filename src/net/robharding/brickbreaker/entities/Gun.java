@@ -43,10 +43,10 @@ public class Gun extends Entity {
 		float proposedY = Game.HEIGHT - 50 - (unitVecToMouse.getY() * 55);
 		
 		if(proposedY < minY) {
-			this.x2 = Game.WIDTH / 2 - (unitVecToMouse.getX() * 55);
+			this.x2 = x - (unitVecToMouse.getX() * 55);
 			this.y2 = proposedY;
 		} else {
-			this.x2 = (Game.mouse.x > Game.WIDTH / 2 ? (Game.WIDTH / 2) + 55 : (Game.WIDTH / 2) - 55);
+			this.x2 = (Game.mouse.x > x ? (x) + 55 : (x) - 55);
 			this.y2 = minY;
 		}
 		isVisible = true;
