@@ -1,21 +1,25 @@
 package net.robharding.brickbreaker.entities.drops;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import net.robharding.brickbreaker.entities.Entity;
 import net.robharding.brickbreaker.states.Level;
+import net.robharding.brickbreaker.util.FileUtils;
 
 public abstract class Drop extends Entity {
 	
 	private int yVel = 4;
 	private int width, height;
-	
 	protected Level level;
 	
-	public Drop(int x, int y, Level level) {
+	private BufferedImage image;
+	
+	public Drop(int x, int y, Level level, String imagePath) {
 		super(x, y);
 		width = 35;
 		height = 35;
+		image = FileUtils.loadImage(imagePath);
 		this.level = level;
 	}
 	
@@ -43,7 +47,9 @@ public abstract class Drop extends Entity {
 	}
 
 	@Override
-	public abstract void draw(Graphics2D g);
+	public void draw(Graphics2D g) {
+		g.drawImage(image, x, y, null);
+	}
 	
 	abstract public void getCollected();
 

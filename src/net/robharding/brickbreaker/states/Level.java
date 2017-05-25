@@ -213,7 +213,7 @@ public class Level extends GameState {
 			}
 		} if(currentStage == Stage.SHOOT) {
 			gun.update();
-			if(mouse.rightPressed) {
+			if(mouse.rightPressed || keyboard.space) {
 				currentStage = Stage.PLAY;
 				gun.shoot();
 				gun.setVisible(false);
