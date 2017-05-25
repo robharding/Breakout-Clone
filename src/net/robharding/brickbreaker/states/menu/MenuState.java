@@ -9,8 +9,8 @@ import net.robharding.brickbreaker.util.FileUtils;
 
 public class MenuState extends GameState {
 
-	private BufferedImage titleImage, playImage, quitImage, highscoresImage, playImage2, quitImage2, highscoresImage2;
-	private ImageEntity titleEntity, playEntity, playEntity2, quitEntity, quitEntity2, highscoresEntity, highscoresEntity2;
+	private BufferedImage titleImage, playImage, quitImage, highscoresImage, playImage2, quitImage2, highscoresImage2, customLevelsImage, customLevelsImage2;
+	private ImageEntity titleEntity, playEntity, playEntity2, quitEntity, quitEntity2, highscoresEntity, highscoresEntity2, customLevelsEntity, customLevelsEntity2;
 	
 	private int currentSelected = 1;
 	
@@ -23,6 +23,8 @@ public class MenuState extends GameState {
 		playImage2 = FileUtils.loadImage("res/play2.png");
 		quitImage2 = FileUtils.loadImage("res/quit2.png");
 		highscoresImage2 = FileUtils.loadImage("res/highscores2.png");
+		customLevelsImage = FileUtils.loadImage("res/customlevels.png");
+		customLevelsImage2 = FileUtils.loadImage("res/customlevels2.png");
 	}
 	
 	@Override
@@ -38,15 +40,19 @@ public class MenuState extends GameState {
 		highscoresEntity2 = new ImageEntity(107, 350, highscoresImage2);
 		screen.addEntity(highscoresEntity2);
 		
-		quitEntity = new ImageEntity(205, 417, quitImage);
-		quitEntity2 = new ImageEntity(205, 417, quitImage2);
+		quitEntity = new ImageEntity(205, 490, quitImage);
+		quitEntity2 = new ImageEntity(205, 490, quitImage2);
 		screen.addEntity(quitEntity2);
+		
+		customLevelsEntity = new ImageEntity(100, 425, customLevelsImage);
+		customLevelsEntity2 = new ImageEntity(100, 425, customLevelsImage2);
+		screen.addEntity(customLevelsEntity2);
 	}
 
 	@Override
 	public void update() {
 		
-		if(keyboard.down && currentSelected < 3) {
+		if(keyboard.down && currentSelected < 4) {
 			currentSelected ++;
 		} else if(keyboard.up && currentSelected > 1) {
 			currentSelected--;
@@ -70,14 +76,27 @@ public class MenuState extends GameState {
 				screen.removeEntity(highscoresEntity2);
 				screen.addEntity(highscoresEntity);
 			}
-			if(!screen.containsEntity(quitEntity2)) {
-				screen.removeEntity(quitEntity);
-				screen.addEntity(quitEntity2);
+			if(!screen.containsEntity(customLevelsEntity2)) {
+				screen.removeEntity(customLevelsEntity);
+				screen.addEntity(customLevelsEntity2);
 			}
 		} else if(currentSelected == 3) {
 			if(!screen.containsEntity(highscoresEntity2)) {
 				screen.removeEntity(highscoresEntity);
 				screen.addEntity(highscoresEntity2);
+			}
+			if(!screen.containsEntity(customLevelsEntity)) {
+				screen.removeEntity(customLevelsEntity2);
+				screen.addEntity(customLevelsEntity);
+			}
+			if(!screen.containsEntity(quitEntity2)) {
+				screen.removeEntity(quitEntity);
+				screen.addEntity(quitEntity2);
+			}
+		} else if(currentSelected == 4) {
+			if(!screen.containsEntity(customLevelsEntity2)) {
+				screen.removeEntity(customLevelsEntity);
+				screen.addEntity(customLevelsEntity2);
 			}
 			if(!screen.containsEntity(quitEntity)) {
 				screen.removeEntity(quitEntity2);
@@ -91,9 +110,12 @@ public class MenuState extends GameState {
 				gsm.setCurrentState(GameStateManager.PLAYSTATE);
 				break;
 			case 2:
-				//TODO: goto high scores screen
+				gsm.setCurrentState(GameStateManager.HIGHSCORESSTATE);
 				break;
 			case 3:
+				gsm.setCurrentState(GameStateManager.CUSTOMLEVELSSTATE);
+				break;
+			case 4:
 				System.exit(0);
 				break;
 			}
