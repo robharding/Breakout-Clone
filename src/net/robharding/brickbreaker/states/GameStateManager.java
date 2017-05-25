@@ -30,15 +30,15 @@ public class GameStateManager {
 		gameStates.add(new GameOverState(this));
 		gameStates.add(new HighScoresState(this));
 		gameStates.add(new CustomLevelsState(this));
-		gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl")));
+		gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), currentLevel));
 		init();
 	}
 	
-	public void levelUp() {
+	public void levelUp(int score) {
 			cleanUp();
 			gameStates.remove(PLAYSTATE);
 			currentLevel++;
-			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl")));
+			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), currentLevel, score));
 			init();
 	}
 	

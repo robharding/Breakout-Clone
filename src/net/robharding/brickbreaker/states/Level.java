@@ -1,7 +1,8 @@
 package net.robharding.brickbreaker.states;
 
-import static net.robharding.brickbreaker.math.Intersections.*;
+import static net.robharding.brickbreaker.math.Intersections.AABBIntersect;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,6 +12,7 @@ import net.robharding.brickbreaker.entities.Brick;
 import net.robharding.brickbreaker.entities.Drop;
 import net.robharding.brickbreaker.entities.Gun;
 import net.robharding.brickbreaker.entities.Paddle;
+import net.robharding.brickbreaker.entities.TextEntity;
 import net.robharding.brickbreaker.math.Vector2f;
 
 public class Level extends GameState {
@@ -18,9 +20,12 @@ public class Level extends GameState {
 	protected Paddle paddle;
 	protected Ball ball;
 	protected Gun gun;
+	protected TextEntity scoreLabel, score, levelLabel, level;
 	
 	private static ArrayList<Brick> bricks;
 	public ArrayList<Drop> drops;
+	
+	private int levelNum;
 	
 	private String levelSource;
 	
@@ -31,10 +36,21 @@ public class Level extends GameState {
 	}
 	
 	public Stage currentStage;
+	
+	public int scoreNum;
 
-	public Level(GameStateManager gsm, String levelSource) {
+	public Level(GameStateManager gsm, String levelSource, int levelNum) {
 		super(gsm);
 		this.levelSource = levelSource;
+		this.levelNum = levelNum;
+		scoreNum = 0;
+	}
+	
+	public Level(GameStateManager gsm, String levelSource, int levelNum, int scoreNum) {
+		super(gsm);
+		this.levelSource = levelSource;
+		this.levelNum = levelNum;
+		this.scoreNum = scoreNum;
 	}
 	
 	private void initEntities() {
@@ -43,6 +59,10 @@ public class Level extends GameState {
 		bricks = new ArrayList<Brick>();
 		drops = new ArrayList<Drop>();
 		gun = new Gun(ball);
+		scoreLabel = new TextEntity(10, 40, "Score:", 36f, Color.BLACK);
+		score = new TextEntity(130, 45, "0", 48f, Color.RED);
+		levelLabel = new TextEntity(Game.WIDTH - 150, 40,"Level", 36f, Color.BLACK);
+		level = new TextEntity(Game.WIDTH - 40, 40, Integer.toString(levelNum), 36f, Color.BLACK);
 	}
 	
 	public void loadEntitiesToScreen() {
@@ -52,6 +72,10 @@ public class Level extends GameState {
 		screen.addEntity(ball);
 		screen.addEntity(gun);
 		screen.addEntity(paddle);
+		screen.addEntity(scoreLabel);
+		screen.addEntity(score);
+		screen.addEntity(levelLabel);
+		screen.addEntity(level);
 	}
 
 	public static void loadLevel(String level) {
@@ -95,6 +119,7 @@ public class Level extends GameState {
 	public void update() {
 		
 		if(ball.getY() > Game.HEIGHT) {
+			scoreNum = 0;
 			gsm.setCurrentState(GameStateManager.GAMEOVERSTATE);
 		}
 		
@@ -111,7 +136,7 @@ public class Level extends GameState {
 			}
 			
 			if(bricks.size() == 0) {
-				gsm.levelUp();
+				gsm.levelUp(scoreNum);
 				return;
 			}
 			
@@ -174,6 +199,8 @@ public class Level extends GameState {
 			Brick b = bricks.get(i);
 						
 			if(b.getHealth() <= 0) {
+				scoreNum += 100;
+				score.setText(Integer.toString(scoreNum));
 				// percentage chance to drop a buff
 				if(testForDrop()) {
 					Drop d = new Drop(b.getX() + (Brick.BRICK_HEIGHT / 2) - 35/2, b.getY());
