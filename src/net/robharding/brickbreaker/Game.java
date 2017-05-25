@@ -12,7 +12,7 @@ public class Game extends JFrame implements Runnable {
 	// Window Constants
 	public static final int WIDTH = 600;
 	public static final int HEIGHT = 700;
-	public static final String TITLE = "Brick Breaker";
+	public static final String TITLE = "Breakout Clone - Robbie Harding";
 	
 	public static Keyboard keyboard;
 	public static Mouse mouse;

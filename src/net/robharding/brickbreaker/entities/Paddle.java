@@ -40,8 +40,8 @@ public class Paddle extends Entity {
 	}
 	
 	public void extend() {
-		x -= 7;
-		width += 14;
+		x -= 10;
+		width += 20;
 	}
 	
 	@Override
