@@ -9,10 +9,11 @@ import java.util.Random;
 import net.robharding.brickbreaker.Game;
 import net.robharding.brickbreaker.entities.Ball;
 import net.robharding.brickbreaker.entities.Brick;
-import net.robharding.brickbreaker.entities.Drop;
 import net.robharding.brickbreaker.entities.Gun;
 import net.robharding.brickbreaker.entities.Paddle;
 import net.robharding.brickbreaker.entities.TextEntity;
+import net.robharding.brickbreaker.entities.drops.Drop;
+import net.robharding.brickbreaker.entities.drops.PaddleExtension;
 import net.robharding.brickbreaker.math.Vector2f;
 
 public class Level extends GameState {
@@ -60,7 +61,7 @@ public class Level extends GameState {
 		drops = new ArrayList<Drop>();
 		gun = new Gun(ball);
 		scoreLabel = new TextEntity(10, 40, "Score:", 36f, Color.BLACK);
-		score = new TextEntity(130, 45, "0", 48f, Color.RED);
+		score = new TextEntity(130, 45, Integer.toString(scoreNum), 48f, Color.RED);
 		levelLabel = new TextEntity(Game.WIDTH - 150, 40,"Level", 36f, Color.BLACK);
 		level = new TextEntity(Game.WIDTH - 40, 40, Integer.toString(levelNum), 36f, Color.BLACK);
 	}
@@ -108,13 +109,6 @@ public class Level extends GameState {
 		}
 	}
 	
-	private boolean testForDrop() {
-		Random rand = new Random();
-		if(rand.nextFloat() <= 0.3f)
-			return true;
-		return false;
-	}
-	
 	@Override
 	public void update() {
 		
@@ -136,6 +130,7 @@ public class Level extends GameState {
 			}
 			
 			if(bricks.size() == 0) {
+				scoreNum += 100;
 				gsm.levelUp(scoreNum);
 				return;
 			}
@@ -171,7 +166,7 @@ public class Level extends GameState {
 						paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight())) {
 					screen.removeEntity(drop);
 					drops.remove(drop);
-					System.out.println("BLESSUP");
+					drop.getCollected();
 				}
 			}
 			
@@ -199,19 +194,24 @@ public class Level extends GameState {
 			Brick b = bricks.get(i);
 						
 			if(b.getHealth() <= 0) {
-				scoreNum += 100;
+				scoreNum += 10;
 				score.setText(Integer.toString(scoreNum));
+				
 				// percentage chance to drop a buff
-				if(testForDrop()) {
-					Drop d = new Drop(b.getX() + (Brick.BRICK_HEIGHT / 2) - 35/2, b.getY());
+				Drop d = Drop.chooseRandomDrop(b.getX() + (Brick.BRICK_HEIGHT / 2) - 35/2, b.getY(), this);
+				
+				if(d != null) {
 					drops.add(d);
 					screen.addEntity(d);
 				}
 				screen.removeEntity(b);
 				bricks.remove(i);
-				System.out.println("Rip");
 			}
 		}
+	}
+	
+	public void extendPaddle() {
+		paddle.extend();
 	}
 
 	@Override

@@ -39,6 +39,11 @@ public class Paddle extends Entity {
 		}
 	}
 	
+	public void extend() {
+		x -= 5;
+		width += 10;
+	}
+	
 	@Override
 	public void draw(Graphics2D g) {
 		g.setColor(new Color(52, 73, 94));
