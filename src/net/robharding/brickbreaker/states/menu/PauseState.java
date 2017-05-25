@@ -95,6 +95,7 @@ public class PauseState extends GameState {
 				break;
 			case 2:
 				gsm.setCurrentState(GameStateManager.MENUSTATE);
+				currentSelected = 1;
 				break;
 			case 3:
 				System.exit(0);

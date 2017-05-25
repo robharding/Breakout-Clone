@@ -45,6 +45,11 @@ public class GameStateManager {
 	public void setCurrentState(int state) {
 		cleanUp();
 		currentState = state;
+		if(currentState == MENUSTATE) {
+			currentLevel = 1;
+			gameStates.remove(PLAYSTATE);
+			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), currentLevel));
+		}
 		init();
 	}
 	
