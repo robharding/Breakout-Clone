@@ -22,6 +22,9 @@ public abstract class GameState {
 	public abstract void init();
 	public void reInit() {}
 	public abstract void update();
-	public abstract void cleanUp();
+	
+	public void cleanUp() {
+		screen.cleanUp();
+	}
 
 }

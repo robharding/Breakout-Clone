@@ -23,32 +23,96 @@ public class GameStateManager {
 	
 	public static int currentLevel = 1;
 	
+	private GameOverState gos;
+	
 	public GameStateManager() {
 		gameStates = new ArrayList<GameState>();
 		gameStates.add(new MenuState(this));
 		gameStates.add(new PauseState(this));
-		gameStates.add(new GameOverState(this));
-		gameStates.add(new HighScoresState(this));
-		gameStates.add(new CustomLevelsState(this));
-		gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), currentLevel));
+		
+		gos = new GameOverState(this);
+		
+		gameStates.add(gos);
+		gameStates.add(new HighScoresState(this, loadHighscores()));
+		gameStates.add(new CustomLevelsState(this, loadHighscores()));
+		gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), currentLevel, gos));
 		init();
+	}
+	
+	public GameState getGameState(int state) {
+		return gameStates.get(state);
+	}
+	
+	public String[] loadHighscores() {
+		String rawHighscoreData = FileUtils.loadAsString("data/scores.txt");
+		String[] highscoreLines = rawHighscoreData.split("\\r?\\n");
+		String[][] scores = new String[highscoreLines.length][];
+		
+		for(int i = 0; i < highscoreLines.length; i++) {
+			scores[i] = highscoreLines[i].split("\\s+");
+			if(scores[i].length > 2) {
+				for(int j = 2; j < scores[i].length; j++) {
+					scores[i][1] += " " + scores[i][j];
+				}
+				String[] s = {scores[i][0], scores[i][1]};
+				scores[i] = s;
+			}
+		}
+		
+		String[] result = new String[scores.length];
+		
+		if(scores.length > 1) {
+		int j;
+		boolean flag = true;
+		String[] temp = null;
+		
+		while(flag) {
+			flag = false;
+			for(j = 0; j < scores.length-1; j++) {
+				if(Integer.parseInt(scores[j][0]) < Integer.parseInt(scores[j+1][0])) {
+					temp = scores[j];
+					scores[j] = scores[j+1];
+					scores[j+1] = temp;
+					flag = true;
+				}
+			}
+		}
+		}
+		
+		if(scores.length == 1 && scores[0].length == 1) {
+			String[] s = {"No results"};
+			return s;
+		}
+		
+		for(int i = 0; i < (scores.length < 10 ? scores.length : 10); i++) {
+			if(scores[i][1] != null)
+				result[i] = scores[i][0] + " " + scores[i][1];
+		}
+		
+		return result;
 	}
 	
 	public void levelUp(int score) {
 			cleanUp();
 			gameStates.remove(PLAYSTATE);
 			currentLevel++;
-			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), currentLevel, score));
+			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), currentLevel, gos, score));
 			init();
 	}
 	
 	public void setCurrentState(int state) {
 		cleanUp();
+		
+		if(currentState == GAMEOVERSTATE) {
+			HighScoresState s = new HighScoresState(this, loadHighscores());
+			gameStates.set(HIGHSCORESSTATE, s);
+		}
+		
 		currentState = state;
 		if(currentState == MENUSTATE) {
 			currentLevel = 1;
 			gameStates.remove(PLAYSTATE);
-			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), currentLevel));
+			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), currentLevel, gos));
 		}
 		init();
 	}

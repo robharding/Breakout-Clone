@@ -5,6 +5,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import javax.imageio.ImageIO;
 
@@ -25,6 +28,14 @@ public class FileUtils {
  			e.printStackTrace();
  		}
 		return result.toString();
+	}
+	
+	public static void appendToFile(String file, String text) {
+		try {
+			Files.write(Paths.get(file), (text + "\n").getBytes(), StandardOpenOption.APPEND);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static BufferedImage loadImage(String file) {

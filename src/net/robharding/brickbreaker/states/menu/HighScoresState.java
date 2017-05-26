@@ -1,27 +1,16 @@
 package net.robharding.brickbreaker.states.menu;
 
-import net.robharding.brickbreaker.states.GameState;
 import net.robharding.brickbreaker.states.GameStateManager;
 
-public class HighScoresState extends GameState {
+public class HighScoresState extends ListState {
 
-	public HighScoresState(GameStateManager gsm) {
-		super(gsm);
-	}
-
-	@Override
-	public void init() {
-		
+	public HighScoresState(GameStateManager gsm, String[] items) {
+		super(gsm, items, "High Scores");
 	}
 
 	@Override
 	public void update() {
-		
-	}
-
-	@Override
-	public void cleanUp() {
-		
+		super.update();
 	}
 
 }

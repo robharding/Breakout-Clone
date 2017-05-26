@@ -3,8 +3,8 @@ package net.robharding.brickbreaker.states;
 import static net.robharding.brickbreaker.math.Intersections.AABBIntersect;
 
 import java.awt.Color;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.robharding.brickbreaker.Game;
 import net.robharding.brickbreaker.entities.Ball;
@@ -14,6 +14,7 @@ import net.robharding.brickbreaker.entities.Paddle;
 import net.robharding.brickbreaker.entities.TextEntity;
 import net.robharding.brickbreaker.entities.drops.Drop;
 import net.robharding.brickbreaker.math.Vector2f;
+import net.robharding.brickbreaker.states.menu.GameOverState;
 
 public class Level extends GameState {
 	
@@ -38,19 +39,23 @@ public class Level extends GameState {
 	public Stage currentStage;
 	
 	public int scoreNum;
+	
+	private GameOverState gameOverState;
 
-	public Level(GameStateManager gsm, String levelSource, int levelNum) {
+	public Level(GameStateManager gsm, String levelSource, int levelNum, GameOverState gameOverState) {
 		super(gsm);
 		this.levelSource = levelSource;
 		this.levelNum = levelNum;
 		scoreNum = 0;
+		this.gameOverState = gameOverState;
 	}
 	
-	public Level(GameStateManager gsm, String levelSource, int levelNum, int scoreNum) {
+	public Level(GameStateManager gsm, String levelSource, int levelNum, GameOverState gameOverState, int scoreNum) {
 		super(gsm);
 		this.levelSource = levelSource;
 		this.levelNum = levelNum;
 		this.scoreNum = scoreNum;
+		this.gameOverState = gameOverState;
 	}
 	
 	private void initEntities() {
@@ -122,8 +127,9 @@ public class Level extends GameState {
 		
 		balls.removeAll(ballsToRemove);
 		if(balls.size() == 0) {
-			scoreNum = 0;
+			gameOverState.setScore(scoreNum);
 			gsm.setCurrentState(GameStateManager.GAMEOVERSTATE);
+			scoreNum = 0;
 		}
 		
 		if(keyboard.esc) {
@@ -250,10 +256,5 @@ public class Level extends GameState {
 	@Override
 	public void reInit() {
 		loadEntitiesToScreen();
-	}
-
-	@Override
-	public void cleanUp() {
-		screen.cleanUp();
 	}
 }
