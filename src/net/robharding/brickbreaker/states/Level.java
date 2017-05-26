@@ -217,16 +217,17 @@ public class Level extends GameState {
 						paddle.getWidth(), paddle.getHeight())) {
 					ball.setLastHit(null);
 				
-					float n = -(ball.getX() + ball.getDiameter() - paddle.getX())/(paddle.getWidth()+ball.getDiameter());
-					float phi = (float) (Math.PI/4 * (2*n-1));
+					
+					float relativeIntersectX = (paddle.getX()+(paddle.getWidth())/2) - (ball.getX() + (ball.getDiameter())/2);
+					
+					float normalizedRelativeIntersectX = relativeIntersectX/(paddle.getWidth()/2);
+
+					float n = (ball.getX() + ball.getDiameter() - paddle.getX())/(paddle.getWidth()+ball.getDiameter());
+					float phi = 1-(float)((2*n) * Math.PI/4);
 					
 					int dirChange = (ball.getX() + ball.getDiameter()/2) < (paddle.getX() + paddle.getWidth()/2) ? -1 : 1;
-					float smash = (float) (Math.abs(phi) > Math.PI/8 ? 1 : 1);
-					ball.setVelocity(new Vector2f(smash*dirChange *(float)(Ball.SPEED*Math.cos(phi)), (float)(Ball.SPEED*Math.sin(phi)/smash)));
-					
-					/*ball.setY(paddle.getY() - ball.getDiameter());
-				
-					ball.setVelocity(new Vector2f(ball.getVelocity().getX(), -ball.getVelocity().getY()));*/
+					ball.setY(paddle.getY() - ball.getDiameter());
+					ball.setVelocity(new Vector2f(dirChange * (float)(Ball.SPEED*Math.cos(phi)), (float)(Ball.SPEED*-Math.sin(phi))));
 				}
 			}
 			for(Drop d: drops) {

@@ -54,6 +54,7 @@ public class Gun extends Entity {
 	
 	public void shoot() {
 		ball.shoot(new Vector2f(-unitVecToMouse.getX() * Ball.SPEED, -unitVecToMouse.getY() * Ball.SPEED));
+		ball.setY(y - ball.getDiameter());
 	}
 
 	@Override
