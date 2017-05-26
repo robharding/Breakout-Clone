@@ -37,6 +37,14 @@ public class TextEntity extends Entity {
 	public void setText(String text) {
 		this.text = text;
 	}
+	
+	public String getText() {
+		return text;
+	}
+	
+	public void setColor(Color color) {
+		this.color = color;
+	}
 
 	@Override
 	public void draw(Graphics2D g) {

@@ -2,6 +2,7 @@ package net.robharding.brickbreaker.states;
 
 import java.util.ArrayList;
 
+import net.robharding.brickbreaker.states.menu.CustomGameOverState;
 import net.robharding.brickbreaker.states.menu.CustomLevelsState;
 import net.robharding.brickbreaker.states.menu.GameOverState;
 import net.robharding.brickbreaker.states.menu.HighScoresState;
@@ -19,11 +20,15 @@ public class GameStateManager {
 	public static final int GAMEOVERSTATE = 2;
 	public static final int HIGHSCORESSTATE = 3;
 	public static final int CUSTOMLEVELSSTATE = 4;
-	public static final int PLAYSTATE = 5;
+	public static final int CUSTOMGAMEOVERSTATE = 5;
+	public static final int CUSTOMLEVELSTATE = 6;
+	public static final int PLAYSTATE = 7;
 	
 	public static int currentLevel = 1;
 	
 	private GameOverState gos;
+	private CustomLevel cls;
+	private CustomGameOverState cgos;
 	
 	public GameStateManager() {
 		gameStates = new ArrayList<GameState>();
@@ -34,8 +39,16 @@ public class GameStateManager {
 		
 		gameStates.add(gos);
 		gameStates.add(new HighScoresState(this, loadHighscores()));
-		gameStates.add(new CustomLevelsState(this, loadHighscores()));
-		gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), currentLevel, gos));
+		gameStates.add(new CustomLevelsState(this, FileUtils.getFileNames("levels/custom/")));
+		
+		cgos = new CustomGameOverState(this);
+		
+		gameStates.add(cgos);
+		
+		cls = new CustomLevel(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), "Custom", cgos); 
+		
+		gameStates.add(cls);
+		gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), Integer.toString(currentLevel), gos));
 		init();
 	}
 	
@@ -96,7 +109,7 @@ public class GameStateManager {
 			cleanUp();
 			gameStates.remove(PLAYSTATE);
 			currentLevel++;
-			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), currentLevel, gos, score));
+			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), Integer.toString(currentLevel), gos, score));
 			init();
 	}
 	
@@ -112,9 +125,15 @@ public class GameStateManager {
 		if(currentState == MENUSTATE) {
 			currentLevel = 1;
 			gameStates.remove(PLAYSTATE);
-			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), currentLevel, gos));
+			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), Integer.toString(currentLevel), gos));
 		}
 		init();
+	}
+	
+	public void setCustomLevelState(String levelSource) {
+		cls = new CustomLevel(this, FileUtils.loadAsString(levelSource), "Custom", cgos);
+		gameStates.set(CUSTOMLEVELSTATE, cls);
+		setCurrentState(CUSTOMLEVELSTATE);
 	}
 	
 	public void pause() {

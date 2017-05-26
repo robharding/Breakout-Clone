@@ -30,6 +30,15 @@ public class FileUtils {
 		return result.toString();
 	}
 	
+	public static String[] getFileNames(String directory) {
+		File[] listOfFiles = new File(directory).listFiles();
+		String[] s = new String[listOfFiles.length];
+		for(int i = 0; i < listOfFiles.length; i++) {
+			s[i] = listOfFiles[i].getName();
+		}
+		return s;
+	}
+	
 	public static void appendToFile(String file, String text) {
 		try {
 			Files.write(Paths.get(file), (text + "\n").getBytes(), StandardOpenOption.APPEND);

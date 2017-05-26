@@ -26,7 +26,7 @@ public class Level extends GameState {
 	private static ArrayList<Ball> balls;
 	public ArrayList<Drop> drops;
 	
-	private int levelNum;
+	protected String levelNum;
 	
 	private String levelSource;
 	
@@ -42,7 +42,7 @@ public class Level extends GameState {
 	
 	private GameOverState gameOverState;
 
-	public Level(GameStateManager gsm, String levelSource, int levelNum, GameOverState gameOverState) {
+	public Level(GameStateManager gsm, String levelSource, String levelNum, GameOverState gameOverState) {
 		super(gsm);
 		this.levelSource = levelSource;
 		this.levelNum = levelNum;
@@ -50,7 +50,7 @@ public class Level extends GameState {
 		this.gameOverState = gameOverState;
 	}
 	
-	public Level(GameStateManager gsm, String levelSource, int levelNum, GameOverState gameOverState, int scoreNum) {
+	public Level(GameStateManager gsm, String levelSource, String levelNum, GameOverState gameOverState, int scoreNum) {
 		super(gsm);
 		this.levelSource = levelSource;
 		this.levelNum = levelNum;
@@ -58,7 +58,7 @@ public class Level extends GameState {
 		this.gameOverState = gameOverState;
 	}
 	
-	private void initEntities() {
+	protected void initEntities() {
 		paddle = new Paddle();
 		bricks = new ArrayList<Brick>();
 		drops = new ArrayList<Drop>();
@@ -67,8 +67,8 @@ public class Level extends GameState {
 		gun = new Gun(balls.get(0));
 		scoreLabel = new TextEntity(10, 40, "Score:", 36f, Color.BLACK);
 		score = new TextEntity(130, 45, Integer.toString(scoreNum), 48f, Color.RED);
-		levelLabel = new TextEntity(Game.WIDTH - 150, 40,"Level", 36f, Color.BLACK);
-		level = new TextEntity(Game.WIDTH - 40, 40, Integer.toString(levelNum), 36f, Color.BLACK);
+		levelLabel = new TextEntity(Game.WIDTH - 150, 40,"Level:", 36f, Color.BLACK);
+		level = new TextEntity(Game.WIDTH - 40, 40, levelNum, 36f, Color.BLACK);
 	}
 	
 	public void loadEntitiesToScreen() {
@@ -84,7 +84,7 @@ public class Level extends GameState {
 		screen.addEntity(level);
 	}
 
-	public static void loadLevel(String level) {
+	public void loadLevel(String level) {
 		String[] rows = level.split("\\r?\\n");
 		for(int i = 0; i < rows.length; i++) {
 			String row = rows[i];
@@ -114,6 +114,18 @@ public class Level extends GameState {
 		}
 	}
 	
+	void levelWin() {
+		scoreNum += 100;
+		gsm.levelUp(scoreNum);
+		return;
+	}
+	
+	void levelLose() {
+		gameOverState.setScore(scoreNum);
+		gsm.setCurrentState(GameStateManager.GAMEOVERSTATE);
+		scoreNum = 0;
+	}
+	
 	@Override
 	public void update() {
 		
@@ -127,9 +139,7 @@ public class Level extends GameState {
 		
 		balls.removeAll(ballsToRemove);
 		if(balls.size() == 0) {
-			gameOverState.setScore(scoreNum);
-			gsm.setCurrentState(GameStateManager.GAMEOVERSTATE);
-			scoreNum = 0;
+			levelLose();
 		}
 		
 		if(keyboard.esc) {
@@ -140,9 +150,7 @@ public class Level extends GameState {
 			paddle.update();
 			
 			if(bricks.size() == 0) {
-				scoreNum += 100;
-				gsm.levelUp(scoreNum);
-				return;
+				levelWin();
 			}
 			
 			// drop collisions

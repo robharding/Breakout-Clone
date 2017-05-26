@@ -9,9 +9,9 @@ import net.robharding.brickbreaker.states.GameStateManager;
 
 public class ListState extends GameState {
 	
-	private String title;
-	private String[] items;
-	private TextEntity[] entities;
+	protected String title;
+	protected String[] items;
+	protected TextEntity[] entities;
 
 	public ListState(GameStateManager gsm, String[] items, String title) {
 		super(gsm);

@@ -14,8 +14,9 @@ import net.robharding.brickbreaker.util.FileUtils;
 
 public class GameOverState extends GameState {
 
-	private BufferedImage titleImage, continueImage;
-	private List<ImageEntity> entities = new ArrayList<ImageEntity>();
+	protected BufferedImage titleImage;
+	protected BufferedImage continueImage;
+	protected List<ImageEntity> entities = new ArrayList<ImageEntity>();
 	private int score;
 	
 	public GameOverState(GameStateManager gsm) {

@@ -47,6 +47,8 @@ public class MenuState extends GameState {
 		customLevelsEntity = new ImageEntity(100, 425, customLevelsImage);
 		customLevelsEntity2 = new ImageEntity(100, 425, customLevelsImage2);
 		screen.addEntity(customLevelsEntity2);
+		
+		currentSelected = 1;
 	}
 
 	@Override
