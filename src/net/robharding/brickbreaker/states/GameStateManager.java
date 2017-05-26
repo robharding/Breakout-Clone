@@ -2,6 +2,8 @@ package net.robharding.brickbreaker.states;
 
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import net.robharding.brickbreaker.states.menu.CustomGameOverState;
 import net.robharding.brickbreaker.states.menu.CustomLevelsState;
 import net.robharding.brickbreaker.states.menu.GameOverState;
@@ -25,6 +27,7 @@ public class GameStateManager {
 	public static final int PLAYSTATE = 7;
 	
 	public static int currentLevel = 1;
+	public static int maxLevel;
 	
 	private GameOverState gos;
 	private CustomLevel cls;
@@ -50,6 +53,9 @@ public class GameStateManager {
 		gameStates.add(cls);
 		gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), Integer.toString(currentLevel), gos));
 		init();
+		
+		maxLevel = FileUtils.getFileNames("levels/").length-1;
+		System.out.println(maxLevel);
 	}
 	
 	public GameState getGameState(int state) {
@@ -106,8 +112,22 @@ public class GameStateManager {
 	}
 	
 	public void levelUp(int score) {
+			if(currentLevel == maxLevel) {
+				setCurrentState(MENUSTATE);
+				JOptionPane.showMessageDialog(null, "You Win!");
+				String name = JOptionPane.showInputDialog(null, "Your score was " + score +"! What is your name?");
+				
+				if(name == null || name.length() == 0) {
+					name = "No Name";
+				}
+				
+				FileUtils.appendToFile("data/scores.txt", score + " " + name);
+				return;
+			}
+			
 			cleanUp();
 			gameStates.remove(PLAYSTATE);
+			
 			currentLevel++;
 			gameStates.add(new Level(this, FileUtils.loadAsString("levels/level" + currentLevel + ".lvl"), Integer.toString(currentLevel), gos, score));
 			init();

@@ -26,7 +26,7 @@ public class Keyboard implements KeyListener {
 		keys[e.getKeyCode()] = false;
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			esc = true;
-		} else if(e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER) {
+		} else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
 			space = true;
 		} else if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
 			up = true;

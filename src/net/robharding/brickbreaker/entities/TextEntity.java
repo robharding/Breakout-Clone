@@ -50,7 +50,8 @@ public class TextEntity extends Entity {
 	public void draw(Graphics2D g) {
 		g.setFont(f);
 		g.setColor(color);
-		g.drawString(text, x, y);
+		//if(text != null)
+			g.drawString(text, x, y);
 	}
 
 }

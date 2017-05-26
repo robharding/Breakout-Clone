@@ -23,7 +23,9 @@ public class ListState extends GameState {
 	@Override
 	public void init() {
 		for(int i = 0; i < items.length; i++) {
-			TextEntity e = new TextEntity(20, 100 + 50*i, items[i], 30f, Color.BLACK) ;
+			if(items[i] == null)
+				break;
+			TextEntity e = new TextEntity(20, 100 + 50*i, (i+1) + ". " + items[i], 30f, Color.BLACK) ;
 			entities[i] = e;
 			screen.addEntity(e);
 		}

@@ -48,6 +48,8 @@ public class Paddle extends Entity {
 	public void draw(Graphics2D g) {
 		g.setColor(new Color(52, 73, 94));
 		g.fillRect(x, y, width, height);
+		g.setColor(new Color(44, 62, 80));
+		g.fillRect(x, y, width/2, height);
 	}
 
 	public int getWidth() {

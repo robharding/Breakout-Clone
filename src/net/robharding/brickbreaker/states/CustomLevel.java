@@ -24,7 +24,7 @@ public class CustomLevel extends Level {
 	@Override
 	void levelWin() {
 		gsm.setCurrentState(GameStateManager.MENUSTATE);
-		JOptionPane.showConfirmDialog(null, "You Win!");
+		JOptionPane.showMessageDialog(null, "You Win!");
 	}
 	
 	@Override
